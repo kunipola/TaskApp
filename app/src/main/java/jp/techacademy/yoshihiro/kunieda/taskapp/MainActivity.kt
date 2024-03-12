@@ -1,5 +1,6 @@
 package jp.techacademy.yoshihiro.kunieda.taskapp
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
@@ -13,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
@@ -21,6 +23,7 @@ import io.realm.kotlin.notifications.UpdatedResults
 import io.realm.kotlin.query.Sort
 import jp.techacademy.yoshihiro.kunieda.taskapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+
 
 const val EXTRA_TASK = "jp.techacademy.yoshihiro.kunieda.taskapp.TASK"
 
@@ -49,13 +52,13 @@ class MainActivity : AppCompatActivity() {
         // OSバージョン確認APIレベル33以上
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // 通知権限が許可されているか確認する
-            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                 // 権限許可済
                 Log.d("ANDROID","許可されている")
             }else {
                 // 許可されていないので許可ダイアログを表示する
                 Log.d("ANDROID","許可されていない")
-                requestPermissonLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                requestPermissonLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         } else {
             // APIレベル33以前のため、アプリ毎の通知設定を確認する
