@@ -3,6 +3,7 @@ package jp.techacademy.yoshihiro.kunieda.taskapp
 import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,11 +11,13 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
-
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
@@ -23,6 +26,7 @@ import io.realm.kotlin.notifications.UpdatedResults
 import io.realm.kotlin.query.Sort
 import jp.techacademy.yoshihiro.kunieda.taskapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+import org.w3c.dom.Text
 
 
 const val EXTRA_TASK = "jp.techacademy.yoshihiro.kunieda.taskapp.TASK"
@@ -32,6 +36,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var realm: Realm
+
+    var research: String = ""
 
     private val requestPermissonLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){isGranted ->
@@ -91,6 +97,18 @@ class MainActivity : AppCompatActivity() {
         // TaskAdapterを生成し、ListViewに設定する
         taskAdapter = TaskAdapter(this)
         binding.listView.adapter = taskAdapter
+
+        // カテゴリー検索でエンターを押したときの処理
+        binding.researchEditText.setOnKeyListener {v, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER){
+
+                research =  binding.researchEditText.text.toString()
+
+                Log.d("check", research)
+            }
+            false
+
+        }
 
         // ListViewをタップしたときの処理
         binding.listView.setOnItemClickListener { parent, _, position, _ ->

@@ -5,7 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.EditText
 import android.widget.TextView
+import io.realm.kotlin.ext.query
+import android.util.Log
+import io.realm.kotlin.Realm
+import jp.techacademy.yoshihiro.kunieda.taskapp.databinding.ActivityMainBinding
+
 
 class TaskAdapter(context: Context) : BaseAdapter() {
     private val layoutInflater: LayoutInflater
@@ -43,8 +49,16 @@ class TaskAdapter(context: Context) : BaseAdapter() {
     fun updateTaskList(taskList: List<Task>) {
         // 一度クリアしてから新しいタスク一覧に入替
         this.taskList.clear()
-        this.taskList.addAll(taskList)
+
+        if ( research != null){
+            val categorytask =taskList.filter( task.category == research)
+            this.taskList.addAll(categorytask)
+        }else {
+            this.taskList.addAll(taskList)
+        }
+
         // データに変更があったことをadapterに通知
         notifyDataSetChanged()
     }
+
 }
