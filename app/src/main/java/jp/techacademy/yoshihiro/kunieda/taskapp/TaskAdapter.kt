@@ -49,14 +49,7 @@ class TaskAdapter(context: Context) : BaseAdapter() {
     fun updateTaskList(taskList: List<Task>) {
         // 一度クリアしてから新しいタスク一覧に入替
         this.taskList.clear()
-
-        if ( research != null){
-            val categorytask =taskList.filter( task.category == research)
-            this.taskList.addAll(categorytask)
-        }else {
-            this.taskList.addAll(taskList)
-        }
-
+        this.taskList.addAll(taskList)
         // データに変更があったことをadapterに通知
         notifyDataSetChanged()
     }

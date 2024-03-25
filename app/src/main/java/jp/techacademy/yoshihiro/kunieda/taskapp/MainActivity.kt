@@ -33,11 +33,8 @@ const val EXTRA_TASK = "jp.techacademy.yoshihiro.kunieda.taskapp.TASK"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var realm: Realm
-
-    var research: String = ""
 
     private val requestPermissonLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){isGranted ->
@@ -101,13 +98,15 @@ class MainActivity : AppCompatActivity() {
         // カテゴリー検索でエンターを押したときの処理
         binding.researchEditText.setOnKeyListener {v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER){
-
-                research =  binding.researchEditText.text.toString()
-
-                Log.d("check", research)
+                if(binding.researchEditText.text.toString() != ""){
+                    val tasks = realm.query<Task>("category = $0",binding.researchEditText.text.toString()).find()
+                    taskAdapter.updateTaskList(tasks)
+                }else{
+                    val tasks = realm.query<Task>().sort("date", Sort.DESCENDING).find()
+                    taskAdapter.updateTaskList(tasks)
+                }
             }
             false
-
         }
 
         // ListViewをタップしたときの処理
@@ -196,4 +195,6 @@ class MainActivity : AppCompatActivity() {
             taskAdapter.updateTaskList(tasks)
         }
     }
+
+
 }
